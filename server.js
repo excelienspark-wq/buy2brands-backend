@@ -27,9 +27,6 @@ const consultationRoutes = require('./routes/consultation.routes');
 const app = express();
 const httpServer = createServer(app);
 
-// Trust proxy (required for Hostinger/Cloudflare/Railway)
-app.set('trust proxy', 1);
-
 // Allowed origins
 const allowedOrigins = [
     'http://localhost:3000',

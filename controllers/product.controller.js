@@ -138,6 +138,52 @@ const updateProduct = async (req, res, next) => {
     }
 };
 
+
+/**
+ * @desc    Duplicate product
+ * @route   POST /api/products/duplicate/:id
+ * @access  Private/Admin
+ */
+const duplicateProduct = async (req, res, next) => {
+    try {
+        const product = await Product.findById(req.params.id);
+
+        if (!product) {
+            return res.status(404).json({
+                success: false,
+                message: 'Product not found'
+            });
+        }
+
+        // Create a deep copy of the product object
+        const productObj = product.toObject();
+
+        // Remove unique identifiers and reset stats
+        delete productObj._id;
+        delete productObj.createdAt;
+        delete productObj.updatedAt;
+        delete productObj.__v;
+
+        productObj.name = `${productObj.name} (Copy)`;
+        productObj.sold = 0;
+        productObj.ratings = [];
+        productObj.numReviews = 0;
+        productObj.averageRating = 0;
+        // Keep images as they are URLs/Cloudinary IDs which can be shared initially
+
+        const newProduct = await Product.create(productObj);
+
+        res.status(201).json({
+            success: true,
+            message: 'Product duplicated successfully',
+            data: { product: newProduct }
+        });
+
+    } catch (error) {
+        next(error);
+    }
+};
+
 /**
  * @desc    Delete product
  * @route   DELETE /api/products/:id
@@ -309,6 +355,7 @@ module.exports = {
     getProduct,
     createProduct,
     updateProduct,
+    duplicateProduct,
     deleteProduct,
     searchProducts,
     uploadImages,

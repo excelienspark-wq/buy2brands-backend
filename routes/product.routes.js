@@ -5,7 +5,6 @@ const {
     getProduct,
     createProduct,
     updateProduct,
-    duplicateProduct,
     deleteProduct,
     searchProducts,
     uploadImages,
@@ -25,7 +24,6 @@ router.get('/:id', objectIdValidation, getProduct);
 // Protected/Admin routes
 router.post('/', protect, authorize, productValidation, createProduct);
 router.put('/:id', protect, authorize, objectIdValidation, updateProduct);
-router.post('/duplicate/:id', protect, authorize, objectIdValidation, duplicateProduct);
 router.delete('/:id', protect, authorize, objectIdValidation, deleteProduct);
 
 // Image upload routes (Admin only)
